@@ -1,22 +1,32 @@
 from typing import Optional
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.responses import PlainTextResponse
+from fastapi.templating import Jinja2Templates
+
+import requests
+from os import getenv
+
+from bs4 import BeautifulSoup
 
 app = FastAPI()
 
-@app.get("/", response_class=PlainTextResponse)
-def read_root():
-    return """
-        # 📅 9 décembre
-        ## Stand up
-        ## To do
-        - [ ] Enlever les hard coded creds
-        - [x] Bug datepicker SDM
-        - [x] Aide Marc data export
-        - [x] Générer les fichiers pour l’injection
-        - [x] Bugs données de vols per flight ACA
-        ## Notes
+templates = Jinja2Templates(directory="templates")
 
-        #work/smartflows/journal/2020/12
-    """
+@app.get("/workout/{id}", response_class=PlainTextResponse)
+def read_workout(request: Request, id: str):
+    with requests.Session() as s:
+        html_doc = s.get('https://thenx.com/sign_in')
+        soup = BeautifulSoup(html_doc.text, 'html.parser')
+
+        data = {
+            'authenticity_token': soup.find('input').attrs["value"],
+            'session[email]': getenv('THENX_EMAIL'),
+            'session[password]': getenv('THENX_PASSWORD'),
+            'commit': 'Login',
+        }
+
+        s.post("https://thenx.com/session", data=data)
+        response = s.get(f"https://thenx.com/workouts/{id}")
+
+        return response.content
