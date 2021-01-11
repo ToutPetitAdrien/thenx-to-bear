@@ -12,6 +12,8 @@ from bs4 import BeautifulSoup
 app = FastAPI()
 
 templates = Jinja2Templates(directory="templates")
+templates.env.trim_blocks = True
+templates.env.lstrip_blocks = True
 
 @app.get("/workout/{id}", response_class=PlainTextResponse)
 def read_workout(request: Request, id: str):
@@ -29,4 +31,48 @@ def read_workout(request: Request, id: str):
         s.post("https://thenx.com/session", data=data)
         response = s.get(f"https://thenx.com/workouts/{id}")
 
-        return response.content
+        return templates.TemplateResponse("workout.html.jinja", {
+            "request": request,
+            "title": "Abs",
+            "tag": "sport/thenx/intermediateprogram",
+            "rounds": [{
+                "title": "Warm Up",
+                "repeat": 2,
+                "exercises": [{
+                    "title": "Low Plank to High Plank",
+                    "quantity": "20 seconds",
+                }, {
+                    "title": "Half Burpees",
+                    "quantity": "30 seconds",
+                }, {
+                    "title": "Jumping Jacks",
+                    "quantity": "30 seconds",
+                }]
+            }, {
+                "title": "Round 1",
+                "repeat": 2,
+                "exercises": [{
+                    "title": "Low Plank to High Plank",
+                    "quantity": "20 seconds",
+                }, {
+                    "title": "Half Burpees",
+                    "quantity": "30 seconds",
+                }, {
+                    "title": "Jumping Jacks",
+                    "quantity": "30 seconds",
+                }]
+            }, {
+                "title": "Round 2",
+                "repeat": 2,
+                "exercises": [{
+                    "title": "Low Plank to High Plank",
+                    "quantity": "20 seconds",
+                }, {
+                    "title": "Half Burpees",
+                    "quantity": "30 seconds",
+                }, {
+                    "title": "Jumping Jacks",
+                    "quantity": "30 seconds",
+                }]
+            }]
+        })
