@@ -6,6 +6,9 @@ name = "pypi"
 [packages]
 fastapi = "*"
 uvicorn = "*"
+requests = "*"
+beautifulsoup4 = "*"
+jinja2 = "*"
 
 [dev-packages]
 pylint = "*"
