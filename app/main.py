@@ -29,7 +29,7 @@ def get_program(id: int):
 
 @app.post("/workouts/")
 def create_template(request: Request, template: TemplateSchema):
-    logger.info(f"Start template creation for {template.workout_url}, {template.week_name}, {program_name}")
+    logger.info(f"Start template creation for {template.workout_url}, {template.week_name}, {template.program_name}")
     dom = get_dom_page(template.workout_url)
     workout = get_workout_from_dom(dom)
     json_workout = jsonable_encoder(workout)
