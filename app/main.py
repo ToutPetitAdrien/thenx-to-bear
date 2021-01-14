@@ -9,15 +9,15 @@ from os import getenv
 
 from bs4 import BeautifulSoup
 
-from fetch import get_dom_page
+from app.fetch import get_dom_page
 from fastapi.encoders import jsonable_encoder
 
-from serializer import get_program_from_dom, get_workout_from_dom
-from schemas import TemplateSchema
+from app.serializer import get_program_from_dom, get_workout_from_dom
+from app.schemas import TemplateSchema
 
 app = FastAPI()
 
-templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(directory="app/templates")
 
 @app.get("/program/{id}")
 def get_program(id: int):

@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup
 
-from schemas import ProgramSchema, WeekSchema, WorkoutSchema, RoundSchema, ExerciseSchema
+from app.schemas import ProgramSchema, WeekSchema, WorkoutSchema, RoundSchema, ExerciseSchema
 
 def get_program_from_dom(dom: str) -> ProgramSchema:
     soup = BeautifulSoup(dom, 'html.parser')
