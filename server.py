@@ -9,24 +9,33 @@ from os import getenv
 
 from bs4 import BeautifulSoup
 
+from fetch import get_dom_page
+from fastapi.encoders import jsonable_encoder
+
+from serializer import get_program_from_dom, get_workout_from_dom
+from schemas import TemplateSchema
+
 app = FastAPI()
 
 templates = Jinja2Templates(directory="templates")
 
-@app.get("/workout/{id}", response_class=PlainTextResponse)
-def read_workout(request: Request, id: str):
-    with requests.Session() as s:
-        html_doc = s.get('https://thenx.com/sign_in')
-        soup = BeautifulSoup(html_doc.text, 'html.parser')
+@app.get("/program/{id}")
+def get_program(id: int):
+    dom = get_dom_page(f"https://thenx.com/programs/{id}")
+    program = get_program_from_dom(dom)
+    json_program = jsonable_encoder(program)
+    return json_program
 
-        data = {
-            'authenticity_token': soup.find('input').attrs["value"],
-            'session[email]': getenv('THENX_EMAIL'),
-            'session[password]': getenv('THENX_PASSWORD'),
-            'commit': 'Login',
-        }
+@app.post("/workouts/")
+def create_template(request: Request, template: TemplateSchema):
+    dom = get_dom_page(template.workout_url)
+    workout = get_workout_from_dom(dom)
+    json_workout = jsonable_encoder(workout)
+    json_workout_with_tag = {
+        **json_workout,
+        "week_name": template.week_name.replace(" ", ""),
+        "program_name": template.program_name.replace(" ", ""),
+        "request": request,
+    }
 
-        s.post("https://thenx.com/session", data=data)
-        response = s.get(f"https://thenx.com/workouts/{id}")
-
-        return response.content
+    return templates.TemplateResponse("workout.html.jinja", json_workout_with_tag)

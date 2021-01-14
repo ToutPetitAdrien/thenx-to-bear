@@ -1,0 +1,17 @@
+<html>
+<head>
+    <title>Workout {{ title }}</title>
+</head>
+<body>
+    <h1>{{ title }}</h1>
+    {%- for round in rounds -%}
+        <h2>{{ round.title }}</h2>
+        <ol>
+            {%- for exercise in round.exercises -%}
+                <li><b>{{ exercise.title }}</b><br>{{ exercise.quantity }}</li>
+            {%- endfor -%}
+        </ol>
+    {%- endfor -%}
+    #sport/thenx/{{ program_name }}/{{ week_name }}
+</body>
+</html>
