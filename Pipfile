@@ -9,6 +9,7 @@ uvicorn = "*"
 requests = "*"
 beautifulsoup4 = "*"
 jinja2 = "*"
+loguru = "*"
 
 [dev-packages]
 pylint = "*"

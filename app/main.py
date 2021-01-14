@@ -3,6 +3,7 @@ from typing import Optional
 from fastapi import FastAPI, Request
 from fastapi.responses import PlainTextResponse
 from fastapi.templating import Jinja2Templates
+from loguru import logger
 
 import requests
 from os import getenv
@@ -28,6 +29,7 @@ def get_program(id: int):
 
 @app.post("/workouts/")
 def create_template(request: Request, template: TemplateSchema):
+    logger.info(f"Start template creation for {template.workout_url}, {template.week_name}, {program_name}")
     dom = get_dom_page(template.workout_url)
     workout = get_workout_from_dom(dom)
     json_workout = jsonable_encoder(workout)
