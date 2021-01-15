@@ -10,7 +10,7 @@ def get_program_from_dom(dom: str) -> ProgramSchema:
     for dom_week in all_dom_weeks:
         weeks.append(WeekSchema(
             title=dom_week.find('h5').string,
-            workouts=['https://thenx.com' + workout.get('href') for workout in dom_week.find_all('a')],
+            workouts=['https://thenx.com' + workout.attrs['href'] for workout in dom_week.find_all('a')],
         ))
     return ProgramSchema(title=title, weeks=weeks)
 

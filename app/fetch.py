@@ -21,6 +21,4 @@ def get_dom_page(url: str) -> str:
     with requests.Session() as s:
         create_logged_session(s)
         response = s.get(url)
-        logger.info(response)
-        logger.info(response.text)
         return response.text
