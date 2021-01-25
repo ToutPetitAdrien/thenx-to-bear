@@ -4,12 +4,12 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-fastapi = "*"
-uvicorn = "*"
 requests = "*"
 beautifulsoup4 = "*"
-jinja2 = "*"
 loguru = "*"
+marshmallow = "*"
+Flask = "*"
+gunicorn = "*"
 
 [dev-packages]
 pylint = "*"

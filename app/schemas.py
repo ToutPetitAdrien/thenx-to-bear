@@ -1,29 +1,26 @@
-from dataclasses import dataclass, field
+from marshmallow import Schema, fields
 
-from pydantic import BaseModel
+class ExerciseSchema(Schema):
+    title = fields.Str()
+    quantity = fields.Str()
 
-class ExerciseSchema(BaseModel):
-    title: str
-    quantity: str
+class RoundSchema(Schema):
+    title = fields.Str()
+    exercises = fields.List(fields.Nested(ExerciseSchema))
 
-class RoundSchema(BaseModel):
-    title: str
-    exercises: list[ExerciseSchema]
+class WorkoutSchema(Schema):
+    title = fields.Str()
+    rounds = fields.List(fields.Nested(RoundSchema))
 
-class WorkoutSchema(BaseModel):
-    title: str
-    rounds: list[RoundSchema]
+class WeekSchema(Schema):
+    title = fields.Str()
+    workouts = fields.List(fields.Str())
 
-class WeekSchema(BaseModel):
-    title: str
-    workouts: list[str]
+class ProgramSchema(Schema):
+    title = fields.Str()
+    weeks = fields.List(fields.Nested(WeekSchema))
 
-class ProgramSchema(BaseModel):
-    title: str
-    weeks: list[WeekSchema]
-
-class TemplateSchema(BaseModel):
-    workout_url: str
-    week_name: str
-    program_name: str
-
+class TemplateSchema(Schema):
+    workout_url = fields.Str()
+    week_name = fields.Str()
+    program_name = fields.Str()
