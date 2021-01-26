@@ -1,18 +1,30 @@
-from flask import Flask, request, abort, render_template
+from flask import Flask, request, abort, render_template, jsonify
+from flask_cors import cross_origin
 from loguru import logger
 
 from app.fetch import get_dom_page
 from app.serializer import get_program_from_dom, get_workout_from_dom
 from app.schemas import ProgramSchema, WorkoutSchema, TemplateSchema
+from app.auth import requires_auth, AuthError
 
-app = Flask(__name__)
+APP = Flask(__name__)
 template_schema = TemplateSchema()
 
-@app.route('/')
-def hello_world():
-    return 'Hello, World!!'
+@APP.errorhandler(AuthError)
+def handle_auth_error(ex):
+    response = jsonify(ex.error)
+    response.status_code = ex.status_code
+    return response
 
-@app.route("/program/<int:id>")
+
+@APP.route('/')
+def hello_world():
+    return 'Hello, World!!!'
+
+
+@APP.route("/program/<int:id>")
+@cross_origin(headers=["Content-Type", "Authorization"])
+@requires_auth
 def get_program(id: int):
     dom = get_dom_page(f"https://thenx.com/programs/{id}")
     program = get_program_from_dom(dom)
@@ -20,7 +32,9 @@ def get_program(id: int):
     return json_program
 
 
-@app.route("/workouts", methods=['POST'])
+@APP.route("/workouts", methods=['POST'])
+@cross_origin(headers=["Content-Type", "Authorization"])
+@requires_auth
 def create_template():
     errors = template_schema.validate(request.form)
     if errors:

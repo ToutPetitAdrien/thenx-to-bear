@@ -10,6 +10,8 @@ loguru = "*"
 marshmallow = "*"
 Flask = "*"
 gunicorn = "*"
+flask-cors = "*"
+python-jose = "*"
 
 [dev-packages]
 pylint = "*"
