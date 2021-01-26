@@ -4,5 +4,4 @@ WORKDIR /app/
 RUN pip3 install pipenv
 COPY . /app
 RUN pipenv install --system --dev
-EXPOSE 8000
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--reload", "--port", "8000"]
+CMD ["gunicorn", "--chdir", "app", "server:app", "-w", "2", "--threads", "2", "-b", "0.0.0.0:8000"]

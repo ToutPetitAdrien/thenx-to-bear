@@ -1,1 +1,1 @@
-web: uvicorn app.main:app --host=0.0.0.0 --port=${PORT:-5000}
+web: gunicorn --chdir app server:app -w 2 --threads 2 -b 0.0.0.0:8000
